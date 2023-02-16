@@ -22,7 +22,7 @@ class App():
         return f"{self.name} - R${self.price} ({self.rating} of 5,0 stars - {self.rating_amount} votes)"
 
     def to_sql(self):
-        return f"('{self.id}', '{self.name}', {self.price}, {self.rating}, {self.rating_amount}, '{self.icon}')"
+        return f"('{self.id}', '{self.name}', {self.price}, {self.rating}, '{self.rating_amount}', '{self.icon}')"
 
 def make_url(id,locale="br"):
     return f"https://apps.apple.com/{locale}/app/id{id}"
@@ -34,37 +34,46 @@ def get_page(id):
     return False
 
 def create_model(html, id):
-    soup = BeautifulSoup(html, "html.parser")
-    
+    try:
+        soup = BeautifulSoup(html, "html.parser")
+    except TypeError:
+        print("App não encontrado")
+        return False
+
     new_app = App()
+    try:
+        new_app.id = id
+        #Get app's name
+        name = soup.find_all("h1", _title_class)[0]
+        new_app.name = name.find(text=True,recursive=False).strip()
 
-    new_app.id = id
-    #Get app's name
-    name = soup.find_all("h1", _title_class)[0]
-    new_app.name = name.find(text=True,recursive=False).strip()
+        #Get app's price
+        price = soup.find_all("li", _price_class)[0]
+        parsed_price = price.string.strip("R$").strip()
+        if parsed_price == "Grátis":
+            new_app.price = float(0)
+        else:
+            new_app.price = float(parsed_price.replace(",","."))
+        try:
+            #Get app's rating
+            rating = soup.find_all("span", _rating_class)[0]
+            new_app.rating = float(rating.string.strip().replace(",","."))
 
-    #Get app's price
-    price = soup.find_all("li", _price_class)[0]
-    parsed_price = price.text.strip("R$").strip()
-    if parsed_price == "Grátis":
-        new_app.price = "0"
-    else:
-        new_app.price = float(parsed_price.replace(",","."))
+            #Get app's amount of counts
+            count = soup.find_all("div", _count_class)[0]
+            new_app.rating_amount = count.string.strip("avaliações").strip()
 
-    #Get app's rating
-    rating = soup.find_all("span", _rating_class)[0]
-    new_app.rating = float(rating.text.strip().replace(",","."))
+        except IndexError:
+            new_app.rating = float(0)
+            new_app.rating_amount = "0"
 
-    #Get app's amount of counts
-    count = soup.find_all("div", _count_class)[0]
-    new_app.rating_amount = int(count.text.strip("avaliações").strip())
-
-    #Get app's icon
-    icon = soup.find_all("picture", _icon_class)[0]
-    icon = icon.find("source")
-    new_app.icon = icon["srcset"].split()[0]
-
-    return new_app
+        #Get app's icon
+        icon = soup.find_all("picture", _icon_class)[0]
+        icon = icon.find("source")
+        new_app.icon = icon["srcset"].split()[0]
+        return new_app
+    except: #generic one
+        return False
 
 def fetch(id):
     html = get_page(id)

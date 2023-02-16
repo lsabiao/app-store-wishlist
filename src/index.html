@@ -15,7 +15,7 @@
         <hr />
         <div class="add">
             <form method="GET" action="add">
-                <input class="uk-input" name="id" id="id" placeholder="https://apps.apple.com/br/app/papers-please/id<seu_id_aqui>"></input>
+                <input class="uk-input" name="id" id="id" placeholder="https://apps.apple.com/br/app/id<seu_id_aqui>"></input>
                 <input class="uk-button uk-button-default" type="submit" value="adicionar">
         </div>
         <div  id="wishlist">
@@ -25,14 +25,19 @@
                 <div class="card-body">
                     <h5> {{app[3]}} de 5⭐ ({{app[4]}} votos)</h5>
                     <div class="title">
-                        <a href="https://apps.apple.com/br/app/papers-please/id{{app[0]}}">
+                        <a href="https://apps.apple.com/br/app/id{{app[0]}}">
                             <h4 class="uk-card-title">{{app[1]}}</h4>
                         </a>
                     </div>
                     <div class="info">
-                        <p>R$:{{app[2]}}</p>
+                        <p class="price">R$:
+                        <%
+                         v = f'{app[2]:.2f}'
+                        %>
+                        {{v}}
+                        </p>
                     </div>
-                    <a href="/delete/{{app[0]}}">
+                    <a href="/delete?id={{app[0]}}">
                         <div class="delete">
                             <p>X</p>
                         </div>
@@ -44,7 +49,7 @@
         <hr />
         <div class="update">
             <p>Feito com ❤️  por <a href="https://sabiao.com.br">Lucas Sabião</a></p>
-            <a href="atualizar">
+            <a href="update">
                 <input class="uk-button uk-button-default" type="button" value="atualizar banco"/>
             </a>
         </div>

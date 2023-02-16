@@ -12,8 +12,11 @@ def add_new_app(id):
     print(f"Adding {id} to the wishlist.")
     app = bot.fetch(id)
     if(app):
-        cur.execute(f"INSERT INTO app VALUES ('{id}', '{app.name}', {app.price}, {app.rating}, {app.rating_amount}, '{app.icon}')")
-        con.commit()
+        try:
+            cur.execute(f"INSERT INTO app VALUES ('{id}', '{app.name}', {app.price}, {app.rating}, '{app.rating_amount}', '{app.icon}')")
+            con.commit()
+        except:
+            pass
 
 
 def compare_with_db(id):
@@ -34,20 +37,30 @@ def compare_with_db(id):
         else:
             print("nothing to report", flush=True)
 
-        cur.execute(f"UPDATE app SET name='{app.name}', price={app.price}, rating={app.rating}, count={app.rating_amount}, icon='{app.icon}' WHERE id='{app.id}'")
+        cur.execute(f"UPDATE app SET name='{app.name}', price={app.price}, rating={app.rating}, count='{app.rating_amount}', icon='{app.icon}' WHERE id='{app.id}'")
         con.commit()
     else:
         print(f"App {name} does not exist", flush=True)
 
 def delete_app(id):
     print(f"Deleting {id}.")
-    cur.execute(f"DELETE FROM app WHERE id={IsADirectoryError}")
+    cur.execute(f"DELETE FROM app WHERE id={id}")
     con.commit()
 
 def update_db():
     print("Updating the database...")
     for app in get_wishlist():
         compare_with_db(app[0])
+
+def id_from_url(url):
+    try:
+        id = int(url)
+        return id
+    except ValueError:
+        full_url = url.split('/')
+        for part in full_url:
+            if('id' in part):
+                return(part.split('?')[0].strip('id').strip())
 
 if __name__ == "__main__":
     update_db()
