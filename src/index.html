@@ -1,85 +1,52 @@
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- UIkit CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.15.24/dist/css/uikit.min.css" />
+        <link rel="stylesheet" href="/static/css/style.css" />
 
-        <style>
-            body{
-                background-color: #f8f8f8;
-            }
-            .card{
-                display: inline-block;
-                width: 400px;
-                border: 40px 0px;
-                padding: 0px;
-                display: flex;
-                flex-direction: column;
-            }
-            .card p{
-                margin-top: 0px;
-                display: inline;
-            }
-
-            .card h3{
-                margin: 20px 0px;
-                display: inline;
-            }
-            .card h5{
-                margin: 0px;
-                display: inline;
-                padding-left: 15px;
-
-            }
-            .icon{
-                margin-bottom: 20px;
-            }
-
-            #wishlist{
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .card-body{
-                padding: 0px 30px;
-            }
-
-            .info{
-                padding: 15px 0px;
-            }
-            .delete{
-                position: absolute;
-                right: 10px;
-                bottom:-15px;
-            }
-	    a{
-	    	cursor:pointer !important;
-	    }
-
-        </style>
 
         <!-- UIkit JS -->
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.24/dist/js/uikit.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.24/dist/js/uikit-icons.min.js"></script>
     </head> 
     <body>
+        <h1 class="uk-text-center">Lista de Desejos</h1>
+        <hr />
+        <div class="add">
+            <form method="GET" action="add">
+                <input class="uk-input" name="id" id="id" placeholder="https://apps.apple.com/br/app/papers-please/id<seu_id_aqui>"></input>
+                <input class="uk-button uk-button-default" type="submit" value="adicionar">
+        </div>
         <div  id="wishlist">
         % for app in wishlist:
             <div class="card uk-card uk-card-hover uk-card-default uk-card-body ">
                 <img class="icon" src="{{app[5]}}"/>
                 <div class="card-body">
-                    <h3 class="uk-card-title">{{app[1]}}</h3>
+                    <h5> {{app[3]}} de 5⭐ ({{app[4]}} votos)</h5>
+                    <div class="title">
+                        <a href="https://apps.apple.com/br/app/papers-please/id{{app[0]}}">
+                            <h4 class="uk-card-title">{{app[1]}}</h4>
+                        </a>
+                    </div>
                     <div class="info">
-                    <p>R$:{{app[2]}}</p> <h5> {{app[3]}} de 5⭐ ({{app[4]}} votos)</h5>
+                        <p>R$:{{app[2]}}</p>
                     </div>
                     <a href="/delete/{{app[0]}}">
-                        <p class="delete">X</p>
+                        <div class="delete">
+                            <p>X</p>
+                        </div>
                     </a>
                 </div>
             </div>
         % end
+        </div>
+        <hr />
+        <div class="update">
+            <p>Feito com ❤️  por <a href="https://sabiao.com.br">Lucas Sabião</a></p>
+            <a href="atualizar">
+                <input class="uk-button uk-button-default" type="button" value="atualizar banco"/>
+            </a>
         </div>
     </body>
 </html>
