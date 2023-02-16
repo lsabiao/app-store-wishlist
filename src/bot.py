@@ -11,6 +11,7 @@ _icon_class = "we-artwork--ios-app-icon"
 class App():
 
     def __init__(self):
+        self.id = "id"
         self.name = "name"
         self.price = "price"
         self.rating = "rating"
@@ -19,6 +20,9 @@ class App():
 
     def __str__(self):
         return f"{self.name} - R${self.price} ({self.rating} of 5,0 stars - {self.rating_amount} votes)"
+
+    def to_sql(self):
+        return f"('{self.id}', '{self.name}', {self.price}, {self.rating}, {self.rating_amount}, '{self.icon}')"
 
 def make_url(id,locale="br"):
     return f"https://apps.apple.com/{locale}/app/id{id}"
@@ -29,11 +33,12 @@ def get_page(id):
         return r.text
     return False
 
-def create_model(html):
+def create_model(html, id):
     soup = BeautifulSoup(html, "html.parser")
     
     new_app = App()
 
+    new_app.id = id
     #Get app's name
     name = soup.find_all("h1", _title_class)[0]
     new_app.name = name.find(text=True,recursive=False).strip()
@@ -44,15 +49,15 @@ def create_model(html):
     if parsed_price == "Grátis":
         new_app.price = "0"
     else:
-        new_app.price = parsed_price
+        new_app.price = float(parsed_price.replace(",","."))
 
     #Get app's rating
     rating = soup.find_all("span", _rating_class)[0]
-    new_app.rating = rating.text.strip()
+    new_app.rating = float(rating.text.strip().replace(",","."))
 
     #Get app's amount of counts
     count = soup.find_all("div", _count_class)[0]
-    new_app.rating_amount = count.text.strip("avaliações").strip()
+    new_app.rating_amount = int(count.text.strip("avaliações").strip())
 
     #Get app's icon
     icon = soup.find_all("picture", _icon_class)[0]
@@ -63,7 +68,7 @@ def create_model(html):
 
 def fetch(id):
     html = get_page(id)
-    return create_model(html)
+    return create_model(html, id)
 
 if __name__ == "__main__":
     arg = argparse.ArgumentParser()

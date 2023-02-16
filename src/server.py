@@ -1,7 +1,9 @@
-from flask import Flask
+from bottle import route, run, template
+import updater
 
-app = Flask(__name__)
+@route('/')
+def index():
+    wishlist = list(updater.get_wishlist())
+    return template("index.html", wishlist=wishlist)
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+run(host='0.0.0.0', port=8180, debug=True)

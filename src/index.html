@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <!-- UIkit CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.15.24/dist/css/uikit.min.css" />
+
+        <style>
+            body{
+                background-color: #f8f8f8;
+            }
+            .card{
+                display: inline-block;
+                width: 400px;
+                border: 40px 0px;
+
+            }
+            .icon{
+                border-radius: 10px;
+            }
+
+        </style>
+
+        <!-- UIkit JS -->
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.24/dist/js/uikit.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.24/dist/js/uikit-icons.min.js"></script>
+    </head>
+    <body>
+        <div class="uk-flex uk-flex-left uk-flex-wrap" id="wishlist">
+        % for app in wishlist:
+            <div class="card uk-card uk-card-hover uk-card-default uk-card-body ">
+                <img class="icon" src="{{app[5]}}"/>
+                <h3 class="uk-card-title">{{app[1]}}</h3>
+                <p>R$:{{app[2]}}</p>
+            </div>
+        % end
+        </div>
+    </body>
+</html>
