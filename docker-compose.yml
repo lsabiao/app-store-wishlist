@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+    app:
+        build: .
+        restart: always
+        volumes:
+            - ./src:/srv/wishlist
+        ports:
+            - "8180:8180"
