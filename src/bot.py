@@ -45,7 +45,7 @@ def create_model(html, id):
         new_app.id = id
         #Get app's name
         name = soup.find_all("h1", _title_class)[0]
-        new_app.name = name.find(text=True,recursive=False).strip()
+        new_app.name = name.find(string=True,recursive=False).strip()
 
         #Get app's price
         price = soup.find_all("li", _price_class)[0]
