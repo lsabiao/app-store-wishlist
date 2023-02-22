@@ -28,7 +28,11 @@ def make_url(id,locale="br"):
     return f"https://apps.apple.com/{locale}/app/id{id}"
 
 def get_page(id):
-    r = requests.get(make_url(id))
+    h = {
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache"
+    }
+    r = requests.get(make_url(id), headers=h)
     if(r.status_code == 200):
         return r.text
     return False

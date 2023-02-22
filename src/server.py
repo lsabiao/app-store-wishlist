@@ -1,6 +1,8 @@
 import time
+import datetime
 import sqlite3
-
+import threading
+import subprocess
 import updater
 
 from bottle import (
@@ -14,6 +16,13 @@ from bottle import (
     response,
 )
 
+def looper():
+    while True:
+        current_hour = datetime.datetime.now().hour
+        print(current_hour, flush=True)
+        if(current_hour > 22 and current_hour <=23):
+            subprocess.run(["python", "updater.py"])
+        time.sleep(3600)
 
 
 #helper functions
@@ -104,4 +113,8 @@ def delete_app():
         updater.delete_app(to_delete)
     redirect('/?delete=true')
 
+
+
+scheduler = threading.Thread(target= looper)
+scheduler.start()
 run(host='0.0.0.0', port=8180, debug=True)

@@ -1,5 +1,7 @@
 import bot
 import sqlite3
+from urllib import request, parse
+
 
 con = sqlite3.connect("wishlist.db")
 cur = con.cursor()
@@ -34,6 +36,12 @@ def compare_with_db(id):
         if(app.price < price): #better price!
             print(" {price} to {app.price}", flush=True)
             #notify
+            
+            #simple push
+            data = parse.urlencode({'key': '<_YOUR_KEY_HERE_>', 'title': '{name}', 'msg': '{price} -> {app.price}', 'event': 'event'}).encode()
+            req = request.Request("https://api.simplepush.io/send", data=data)
+            request.urlopen(req)
+
         else:
             print("nothing to report", flush=True)
 
