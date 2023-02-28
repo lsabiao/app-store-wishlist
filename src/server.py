@@ -4,6 +4,8 @@ import sqlite3
 import threading
 import subprocess
 import updater
+import hashlib
+import bottle 
 
 from bottle import (
     route,
@@ -31,8 +33,10 @@ def get_cookie(request):
     cookie = request.get_cookie("hash")
     con = sqlite3.connect("wishlist.db")
     cur = con.cursor()
-    query = cur.execute(f"SELECT username FROM user WHERE cookie='{cookie}'")
+    query = cur.execute(updater.clean_query(f"SELECT username FROM user WHERE cookie='{cookie}'"))
     result = query.fetchone()
+    cur.close()
+    con.close()
     if(result):
         pass
     else:
@@ -44,8 +48,11 @@ def generate_cookie():
 def get_user(username,password):
     con = sqlite3.connect("wishlist.db")
     cur = con.cursor()
-    query = cur.execute(f"SELECT username FROM user WHERE username='{username}' AND password='{password}'")
+    password = hashlib.md5(password.encode()).hexdigest()
+    query = cur.execute(updater.clean_query(f"SELECT username FROM user WHERE username='{username}' AND password='{password}'"))
     result = query.fetchone()
+    cur.close()
+    con.close()
     if(result):
         return True
     else:
@@ -75,8 +82,10 @@ def log_user():
         con = sqlite3.connect("wishlist.db")
         cur = con.cursor()
         generated_hash = generate_cookie()
-        cur.execute(f"UPDATE user SET cookie='{generated_hash}'")
+        cur.execute(updater.clean_query(f"UPDATE user SET cookie='{generated_hash}'"))
         con.commit()
+        cur.close()
+        con.close()
         response.set_cookie("hash", generated_hash)
 
         redirect("/")
@@ -115,6 +124,12 @@ def delete_app():
 
 
 
+
+
+if __name__ == "__main__":
+    run(host='0.0.0.0', port=8000, debug=True)
+
+
 scheduler = threading.Thread(target= looper)
 scheduler.start()
-run(host='0.0.0.0', port=8180, debug=True)
+app = bottle.default_app()

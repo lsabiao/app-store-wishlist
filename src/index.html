@@ -13,6 +13,7 @@
     <body>
         <h1 class="uk-text-center">Lista de Desejos</h1>
         <hr />
+
         <div class="add">
             <form method="GET" action="add">
                 <input class="uk-input" name="id" id="id" placeholder="https://apps.apple.com/br/app/id<seu_id_aqui>"></input>
@@ -37,8 +38,8 @@
                         {{v}}
                         </p>
                     </div>
-                    <a href="/delete?id={{app[0]}}">
-                        <div class="delete">
+                    <a href="#" onclick="delete_app('{{app[0]}}','{{app[1]}}')">
+                        <div class="delete" >
                             <p>X</p>
                         </div>
                     </a>
@@ -54,4 +55,13 @@
             </a>
         </div>
     </body>
+
+    <script>
+        function delete_app(id, name){
+            if(confirm("Tem certeza que deseja apagar '"+name+"' ?")){
+                window.location.href="/delete?id="+id;
+            }
+        }
+    </script>
+
 </html>

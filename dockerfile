@@ -6,4 +6,4 @@ WORKDIR /srv/wishlist
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD python server.py
+CMD gunicorn -w 2 -b "0.0.0.0:8180" server:app

@@ -8,6 +8,8 @@ _rating_class = "we-customer-ratings__averages__display"
 _count_class = "we-customer-ratings__count"
 _icon_class = "we-artwork--ios-app-icon"
 
+_MAXIMUM_RETRIES = 5
+
 class App():
 
     def __init__(self):
@@ -19,7 +21,7 @@ class App():
         self.icon = "icon"
 
     def __str__(self):
-        return f"{self.name} - R${self.price} ({self.rating} of 5,0 stars - {self.rating_amount} votes)"
+        return f"{self.name} - R${self.price} ({self.rating} of 5.0 stars - {self.rating_amount} votes)"
 
     def to_sql(self):
         return f"('{self.id}', '{self.name}', {self.price}, {self.rating}, '{self.rating_amount}', '{self.icon}')"
@@ -32,10 +34,13 @@ def get_page(id):
         "Cache-Control": "no-cache",
         "Pragma": "no-cache"
     }
-    r = requests.get(make_url(id), headers=h)
-    if(r.status_code == 200):
-        return r.text
-    return False
+    try:
+        r = requests.get(make_url(id), headers=h)
+        if(r.status_code == 200):
+            return r.text
+        return False
+    except:
+        return False
 
 def create_model(html, id):
     try:
@@ -80,7 +85,13 @@ def create_model(html, id):
         return False
 
 def fetch(id):
-    html = get_page(id)
+    html = False
+    count=0
+    while(html == False):
+        count+=1
+        html = get_page(id)
+        if(count > _MAXIMUM_RETRIES):
+            return False
     return create_model(html, id)
 
 if __name__ == "__main__":

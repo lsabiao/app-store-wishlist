@@ -6,4 +6,4 @@ services:
         volumes:
             - ./src:/srv/wishlist
         ports:
-            - "8080:8180"
+            - "8180:8180"
