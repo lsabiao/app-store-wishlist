@@ -57,7 +57,7 @@ def compare_with_db(id):
             #notify
             
             #simple push
-            data = parse.urlencode({'key': '<_YOUR_KEY_HERE_>', 'title': '{name}', 'msg': '{price} -> {app.price}', 'event': 'event'}).encode()
+            data = parse.urlencode({'key': '<_YOUR_KEY_HERE_>', 'title': f'{name}', 'msg': f'R$:{price} -> R$:{app.price}', 'event': 'event'}).encode()
             req = request.Request("https://api.simplepush.io/send", data=data)
             request.urlopen(req)
 
