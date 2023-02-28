@@ -6,7 +6,7 @@ def clean_query(query):
     return query.replace(";","").replace("--",'')
 
 def open_db():
-    con = sqlite3.connect("wishlist.db")
+    con = sqlite3.connect("wishlist.db", timeout=20)
     cur = con.cursor()
     return [con,cur]
 
