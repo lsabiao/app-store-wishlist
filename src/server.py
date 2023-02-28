@@ -31,7 +31,7 @@ def looper():
 def get_cookie(request):
     #this could be a decorator
     cookie = request.get_cookie("hash")
-    con = sqlite3.connect("wishlist.db")
+    con = sqlite3.connect("wishlist.db", timeout=20)
     cur = con.cursor()
     query = cur.execute(updater.clean_query(f"SELECT username FROM user WHERE cookie='{cookie}'"))
     result = query.fetchone()
@@ -46,7 +46,7 @@ def generate_cookie():
     return str(hash(int(time.time())))
 
 def get_user(username,password):
-    con = sqlite3.connect("wishlist.db")
+    con = sqlite3.connect("wishlist.db", timeout=20)
     cur = con.cursor()
     password = hashlib.md5(password.encode()).hexdigest()
     query = cur.execute(updater.clean_query(f"SELECT username FROM user WHERE username='{username}' AND password='{password}'"))
@@ -79,7 +79,7 @@ def log_user():
 
     if(get_user(username,password)):
         #correct Login
-        con = sqlite3.connect("wishlist.db")
+        con = sqlite3.connect("wishlist.db", timeout=20)
         cur = con.cursor()
         generated_hash = generate_cookie()
         cur.execute(updater.clean_query(f"UPDATE user SET cookie='{generated_hash}'"))
@@ -121,10 +121,6 @@ def delete_app():
     if(to_delete):
         updater.delete_app(to_delete)
     redirect('/?delete=true')
-
-
-
-
 
 if __name__ == "__main__":
     run(host='0.0.0.0', port=8000, debug=True)
