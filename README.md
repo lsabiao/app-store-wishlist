@@ -1,8 +1,9 @@
-# app-store-wishlist
-The app store has no wishlist, so it's time to make one
+# AppStore wishlist
+The iOS app store has no wishlist, so it's time to make one!
 
+This program uses a webscrapper bot ([Built with beautifulsoup4](https://www.crummy.com/software/BeautifulSoup/)) to get the info about the apps from the iOS appstore webpage and displays the information using a web interface. ([Built with bottle.py](https://bottlepy.org/docs/dev/))
 
-## web interface
+## The web interface
 <img src="https://i.imgur.com/kiC3vhT.png" alt="web interface">
 
 ## how to install
@@ -15,14 +16,14 @@ The app store has no wishlist, so it's time to make one
 ## how to use
 - open your browser and go to http://localhost:8180
 
-(The default user is: abcd and the password is abcd)
+(The default user is: ```abcd``` and the password is ```abcd```)
 
 ## how to delete an app
 - click the "X" on the card to delete an app
 
 ## how to add an app
 - Use the text input to add the URL of the app you want
-Eg: https://apps.apple.com/br/app/majesty-fantasy-kingdom-sim/id455219788
+Eg: ```https://apps.apple.com/br/app/majesty-fantasy-kingdom-sim/id455219788```
 
 ## extra
 - use the bottom at the bottom to force an update on the entire whishlist (usually not needed)
